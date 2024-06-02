@@ -50,9 +50,14 @@ $.ajax({
             container: "#pivot-table-container",
             componentFolder: "https://cdn.flexmonster.com/",
             width: "100%",
-            height: 430,
+            height: "100%",
             toolbar: true,
             report: {
+                "options": {
+                    "grid": {
+                        showGrandTotals: "off"
+                    }
+                },
                 dataSource: {
                     type: "json",
                     data: processData(data),
@@ -89,51 +94,7 @@ $.ajax({
                 }
             }
         });
-        new Flexmonster({
-            container: "#pivot-chart-container",
-            componentFolder: "https://cdn.flexmonster.com/",
-            width: "100%",
-            height: 430,
-            //toolbar: true,
-            report: {
-                dataSource: {
-                    type: "json",
-                    data: processData(data),
-                    mapping: {
-                        "economic_activity": {
-                            "caption": "Economic activity"
-                        },
-                        "year": {
-                            "caption": "Year",
-                            "type": "number"
-                        },
-                        "total": {
-                            "caption": "Paid total",
-                            "type": "number"
-                        }
-                    }
-                },
-                "slice": {
-                    "rows": [{
-                        "uniqueName": "economic_activity"
-                    }],
-                    "columns": [{
-                        "uniqueName": "[Measures]"
-                    }],
-                    "measures": [{
-                        "uniqueName": "Average",
-                        "formula": "sum(\"total\") / 7",
-                        "caption": "Average"
-                    }]
-                },
-                "options": {
-                    "viewType": "charts",
-                    "chart": {
-                        "type": "pie"
-                    }
-                }
-            }
-        });
+
     }
 });
 
