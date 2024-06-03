@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+TELEGRAM_BOT_TOKEN = '7108540349:AAGYhRi5hpSIpUMcshTQpUWZyUXZfoFR8CI'
+TELEGRAM_CHAT_ID = '915802223'
 # Application definition
 
 INSTALLED_APPS = [
@@ -126,3 +127,21 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGGING = {
+       'version': 1,
+       'disable_existing_loggers': False,
+       'handlers': {
+           'file': {
+               'level': 'DEBUG',
+               'class': 'logging.FileHandler',
+               'filename': 'debug.log',
+           },
+       },
+       'loggers': {
+           'django': {
+               'handlers': ['file'],
+               'level': 'DEBUG',
+               'propagate': True,
+           },
+       },
+   }
