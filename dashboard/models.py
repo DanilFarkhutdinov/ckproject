@@ -20,3 +20,9 @@ class Salary(models.Model):
 
     def get_percentage_change(self, old_amount):
         return ((self.amount - old_amount) / old_amount) * 100
+
+
+class Difference(models.Model):
+    year = models.IntegerField(validators=[MinValueValidator(2000), MaxValueValidator(datetime.date.today().year)])
+    economic_activity = models.CharField(max_length=500)
+    total = models.IntegerField()

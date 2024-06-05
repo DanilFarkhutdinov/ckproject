@@ -2,7 +2,27 @@ import psycopg2
 from psycopg2 import Error
 from data import Data
 
+import requests
+import bs4
+
 data = Data()
+
+
+response = requests.get("https://уровень-инфляции.рф/таблицы-инфляции")
+tree = bs4.BeautifulSoup(response.text, 'html.parser')
+t = tree.select('td', {'class':'text-right'})
+index = 27
+l1 = [index + 14, index + 14 * 2, index + 14 * 3, index + 14 * 4, index + 14 * 5, index + 14 * 6]
+coff = []
+count = 0
+for item in tree.select('td', {'class':'text-right'}):
+    if count in l1:
+        coff.append(item.text)
+    count += 1
+    if len(coff) > 7:
+        break
+coff.reverse()
+print(coff) #инфляция с 2017 года
 
 try:
     connection = psycopg2.connect(user="postgres",
@@ -26,7 +46,18 @@ try:
                                'VALUES (%s,%s,%s,%s)', row)
                 connection.commit()
                 rowcount += 1
-        print()
+    for j in range(1, data.df.keys().size):
+        #print(data.df.keys()[j])
+        print(float(coff[j - 1]) / 100 + 1)
+        for i in range(0, data.df.index.size):
+            if i in l:
+                #print(data.df.index[i], data.df.values[i][j])
+                row = (rowcount, int(data.df.keys()[j]), data.df.index[i], int(data.df.values[i][j]) / (float(coff[j - 1]) / 100 + 1) - int(data.df.values[i][j - 1]))
+                print(row)
+                cursor.execute('INSERT INTO dashboard_difference(id, year, economic_activity, total) '
+                'VALUES (%s,%s,%s,%s)', row)
+                connection.commit()
+                rowcount += 1
 
 except (Exception, Error) as error:
     print("Ошибка при работе с PostgreSQL", error)
